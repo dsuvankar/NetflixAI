@@ -1,29 +1,71 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import Header from "./Header";
 import { LOGIN_BG } from "../utils/Constants";
-
+import checkValidData from "./Validate"; // Import the updated validation function
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../utils/firebase";
+import { signInWithEmailAndPassword } from "firebase/auth/cordova";
 const LogIn = () => {
   const [errorMessage, setErrorMessage] = useState("");
-  const [isSignInForm, setIsSignInForm] = useState(false);
+  const [isSignUpForm, setIsSignUpForm] = useState(false);
 
+  const email = useRef(null);
   const password = useRef(null);
   const confirmPassword = useRef(null);
 
-  const passwordMatch = () => {
-    if (password.current.value !== confirmPassword.current.value) {
-      setErrorMessage("Passwords do not match");
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+
+    const errorMsg = checkValidData(
+      password.current.value,
+      confirmPassword.current?.value,
+      isSignUpForm
+    );
+
+    if (errorMsg) {
+      setErrorMessage(errorMsg);
     } else {
       setErrorMessage("");
+      if (isSignUpForm) {
+        createUserWithEmailAndPassword(
+          auth,
+          email.current.value,
+          password.current.value
+        )
+          .then((userCredential) => {
+            const user = userCredential.user;
+            console.log(user);
+          })
+          .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log(errorCode + "--" + errorMessage);
+          });
+      } else {
+        signInWithEmailAndPassword(
+          auth,
+          email.current.value,
+          password.current.value
+        )
+          .then((userCredential) => {
+            // Signed in
+            const user = userCredential.user;
+            console.log(user);
+          })
+          .catch((error) => {
+            if (error.code === "auth/invalid-credential") {
+              setErrorMessage("Invalid email/password");
+            } else {
+              console.log(error.code, error.message);
+            }
+          });
+      }
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    passwordMatch();
-  };
-
-  const toggleSignInForm = () => {
-    setIsSignInForm(!isSignInForm);
+  const toggleSignUpForm = () => {
+    setErrorMessage("");
+    setIsSignUpForm(!isSignUpForm);
   };
 
   return (
@@ -37,18 +79,19 @@ const LogIn = () => {
       />
       <div className="absolute inset-0 flex justify-center items-center z-20">
         <form
-          onSubmit={handleSubmit}
+          onSubmit={handleFormSubmit} // Single handler for both sign-up and sign-in
           className="bg-black bg-opacity-60 text-white p-6 rounded-lg w-full max-w-[400px]">
           <h1 className="font-bold text-xl md:text-2xl xl:text-3xl mb-6">
-            {isSignInForm ? "Sign In" : "Sign Up"}
+            {isSignUpForm ? "Sign Up" : "Sign In"}
           </h1>
-          {!isSignInForm && (
+          {isSignUpForm && (
             <div className="relative mb-4">
               <input
                 className="peer placeholder-transparent text-sm lg:text-md w-full p-4 rounded-md bg-transparent text-white border-2 border-gray-500"
                 type="text"
                 id="name"
                 placeholder="Name"
+                aria-label="Name"
               />
               <label
                 className="absolute top-0 left-4 text-xs transition-all text-gray-400 peer-placeholder-shown:top-4 peer-placeholder-shown:left-4 peer-placeholder-shown:text-base peer-focus:top-0 peer-focus:left-4 peer-focus:text-xs"
@@ -59,10 +102,12 @@ const LogIn = () => {
           )}
           <div className="relative mb-4">
             <input
+              ref={email}
               className="peer placeholder-transparent text-sm lg:text-md w-full p-4 rounded-md bg-transparent text-white border-2 border-gray-500"
-              type="email"
+              type="text"
               id="email"
               placeholder="Email"
+              aria-label="Email"
             />
             <label
               className="absolute top-0 left-4 text-xs transition-all text-gray-400 peer-placeholder-shown:top-4 peer-placeholder-shown:left-4 peer-placeholder-shown:text-base peer-focus:top-0 peer-focus:left-4 peer-focus:text-xs"
@@ -77,6 +122,7 @@ const LogIn = () => {
               id="password"
               type="password"
               placeholder="Enter your Password"
+              aria-label="Password"
             />
             <label
               className="absolute top-0 left-4 text-xs text-gray-400 transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:left-4 peer-placeholder-shown:text-base peer-focus:top-0 peer-focus:left-4 peer-focus:text-xs"
@@ -85,7 +131,7 @@ const LogIn = () => {
             </label>
           </div>
 
-          {!isSignInForm && (
+          {isSignUpForm && (
             <div className="relative">
               <input
                 ref={confirmPassword}
@@ -93,6 +139,7 @@ const LogIn = () => {
                 id="confirmPassword"
                 type="password"
                 placeholder="Confirm Password"
+                aria-label="Confirm Password"
               />
               <label
                 className="absolute top-0 left-4 text-xs text-gray-400 transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:left-4 peer-placeholder-shown:text-base peer-focus:top-0 peer-focus:left-4 peer-focus:text-xs"
@@ -105,14 +152,14 @@ const LogIn = () => {
           <button
             className="p-2 xl:p-4 my-2 w-full font-bold text-sm xl:text-md bg-red-600 rounded-md text-center hover:brightness-150"
             type="submit">
-            {isSignInForm ? "Sign In" : "Sign Up"}
+            {isSignUpForm ? "Sign Up" : "Sign In"}
           </button>
           <p
             className="text-gray-300 py-4 cursor-pointer hover:underline text-sm xl:text-md"
-            onClick={toggleSignInForm}>
-            {isSignInForm
-              ? "New to Netflix? Sign Up Now"
-              : "Already registered? Sign In Now"}
+            onClick={toggleSignUpForm}>
+            {isSignUpForm
+              ? "Already registered? Sign In Now"
+              : "New to Netflix? Sign Up Now"}
           </p>
         </form>
       </div>
