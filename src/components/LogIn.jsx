@@ -1,14 +1,24 @@
 import React, { useRef, useState } from "react";
 import Header from "./Header";
-import { LOGIN_BG } from "../utils/Constants";
-import checkValidData from "./Validate"; // Import the updated validation function
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { LOGIN_BG, USER_PROFILE_PIC } from "../utils/Constants";
+import checkValidData from "./Validate";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
 import { auth } from "../utils/firebase";
-import { signInWithEmailAndPassword } from "firebase/auth/cordova";
+import { useDispatch } from "react-redux";
+import { addUser } from "../utils/userSlice";
+import { useNavigate } from "react-router-dom";
+
 const LogIn = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [isSignUpForm, setIsSignUpForm] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
+  const name = useRef(null);
   const email = useRef(null);
   const password = useRef(null);
   const confirmPassword = useRef(null);
@@ -34,7 +44,24 @@ const LogIn = () => {
         )
           .then((userCredential) => {
             const user = userCredential.user;
-            console.log(user);
+            updateProfile(user, {
+              displayName: name?.current?.value,
+              photoURL: USER_PROFILE_PIC,
+            })
+              .then(() => {
+                const { uid, email, displayName } = auth.currentUser;
+                dispatch(
+                  addUser({
+                    uid: uid,
+                    email: email,
+                    displayName: displayName,
+                    photoURL: USER_PROFILE_PIC,
+                  })
+                );
+              })
+              .catch((error) => {
+                console.log("problem in updateProfile" + error.message);
+              });
           })
           .catch((error) => {
             const errorCode = error.code;
@@ -48,9 +75,7 @@ const LogIn = () => {
           password.current.value
         )
           .then((userCredential) => {
-            // Signed in
             const user = userCredential.user;
-            console.log(user);
           })
           .catch((error) => {
             if (error.code === "auth/invalid-credential") {
@@ -79,7 +104,7 @@ const LogIn = () => {
       />
       <div className="absolute inset-0 flex justify-center items-center z-20">
         <form
-          onSubmit={handleFormSubmit} // Single handler for both sign-up and sign-in
+          onSubmit={handleFormSubmit}
           className="bg-black bg-opacity-60 text-white p-6 rounded-lg w-full max-w-[400px]">
           <h1 className="font-bold text-xl md:text-2xl xl:text-3xl mb-6">
             {isSignUpForm ? "Sign Up" : "Sign In"}
@@ -88,6 +113,7 @@ const LogIn = () => {
             <div className="relative mb-4">
               <input
                 className="peer placeholder-transparent text-sm lg:text-md w-full p-4 rounded-md bg-transparent text-white border-2 border-gray-500"
+                ref={name}
                 type="text"
                 id="name"
                 placeholder="Name"
@@ -135,7 +161,7 @@ const LogIn = () => {
             <div className="relative">
               <input
                 ref={confirmPassword}
-                className="peer placeholder-transparent text-sm lg:text-md w-full p-4 rounded-md bg-transparent text-white border-2 border-gray-500"
+                className="peer placeholder-transparent text-sm lg:text-md w-full px-4 py-4 rounded-md bg-transparent text-white border-2 border-gray-500"
                 id="confirmPassword"
                 type="password"
                 placeholder="Confirm Password"
