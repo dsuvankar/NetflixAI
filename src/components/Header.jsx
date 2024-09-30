@@ -34,8 +34,15 @@ const Header = () => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         // User is signed in, see docs for a list of available properties
-        const { uid, email, displayName } = user;
-        dispatch(addUser({ uid: uid, email: email, displayName: displayName }));
+        const { uid, email, displayName, photoURL } = user;
+        dispatch(
+          addUser({
+            uid: uid,
+            email: email,
+            displayName: displayName,
+            photoURL: photoURL,
+          })
+        );
 
         // if (location.pathname !== "/gpt-search") {
         //   navigate("/browse");
@@ -48,6 +55,7 @@ const Header = () => {
         navigate("/");
       }
     });
+
     return () => unsubscribe();
   }, [dispatch, navigate]);
   return (
@@ -68,7 +76,7 @@ const Header = () => {
           <img
             className="ml-[2px] h-12 rounded-lg"
             alt="usericon"
-            src={user?.photoURL}
+            src={user?.photoURL || "https://placehold.co/300"}
           />
           <span className="font-semibold mt-1 text-white rounded-lg text-[10px] sm:text-[12px]">
             Sign Out

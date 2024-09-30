@@ -1,23 +1,17 @@
-import React, { useEffect } from "react";
 import Header from "./Header";
-import { API_OPTIONS } from "../utils/Constants";
+
+import useNowPlayingMovies from "../hooks/useNowPlayingMovies";
+import MainContainer from "./MainContainer";
+import SecondaryContainer from "./SecondaryContainer";
 
 const Browse = () => {
-  const url = "https://api.themoviedb.org/3/movie/now_playing?&page=1";
-
-  const getDataFromAPI = async () => {
-    const data = await fetch(url, API_OPTIONS);
-
-    const res = await data.json();
-    console.log(res);
-  };
-
-  useEffect(() => {
-    getDataFromAPI();
-  }, []);
+  useNowPlayingMovies();
   return (
-    <div>
+    <div className="w-screen bg-gradient-to-b from-gray-700">
       <Header />
+
+      <MainContainer />
+      <SecondaryContainer />
     </div>
   );
 };

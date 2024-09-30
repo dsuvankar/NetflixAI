@@ -49,13 +49,13 @@ const LogIn = () => {
               photoURL: USER_PROFILE_PIC,
             })
               .then(() => {
-                const { uid, email, displayName } = auth.currentUser;
+                const { uid, email, displayName, photoURL } = auth.currentUser;
                 dispatch(
                   addUser({
                     uid: uid,
                     email: email,
                     displayName: displayName,
-                    photoURL: USER_PROFILE_PIC,
+                    photoURL: photoURL,
                   })
                 );
               })
