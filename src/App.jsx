@@ -4,7 +4,7 @@ import store from "./reduxStore/store";
 
 function App() {
   return (
-    <div>
+    <div className="">
       <Provider store={store}>
         <Body />
       </Provider>

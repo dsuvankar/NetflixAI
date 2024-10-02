@@ -3,7 +3,7 @@ import React from "react";
 const VideoTitle = ({ title, overview, id }) => {
   //
   return (
-    <div className=" mt-[6rem] pt-[10%] sm:mt-[6rem] md:mt-[8rem] lg:mt-[10rem] xl:mt-[16rem] ml-8 sm:ml-8 lg:ml-12 p-2 w-1/2 absolute text-white z-30">
+    <div className=" mt-[6rem] pt-[5%] sm:mt-[6rem] md:mt-[6rem] lg:mt-[10rem] xl:mt-[16rem] ml-8 sm:ml-8 lg:ml-12 p-2 w-1/2 absolute text-white z-30">
       <h1 className="text-lg sm:text-2xl md:text-3xl xl:text-5xl py-0 sm:py-4 font-bold">
         {title}
       </h1>
