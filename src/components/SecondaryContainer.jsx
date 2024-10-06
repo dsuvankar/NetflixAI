@@ -6,8 +6,8 @@ const SecondaryContainer = () => {
   const movies = useSelector((store) => store.movies);
   if (!movies.nowPlayingMovies) return;
   return (
-    <div className="bg-black h-full w-full ">
-      <div className="-mt-0 md:-mt-36 pl-1 relative z-20">
+    <div className="bg-black h-auto w-screen ">
+      <div className="-mt-0 overflow-hidden md:-mt-36 pl-1 relative z-20">
         <MovieList title={"Now Playing"} movies={movies.nowPlayingMovies} />
         <MovieList title={"Upcoming"} movies={movies.upComingMovies} />
         <MovieList title={"Top Rated"} movies={movies.topRatedMovies} />

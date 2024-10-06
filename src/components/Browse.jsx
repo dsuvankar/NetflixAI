@@ -13,7 +13,7 @@ const Browse = () => {
   useTopRatedMovies();
   useUpComingMovies();
   return (
-    <div className="w-screen bg-black bg-gradient-to-b from-gray-700">
+    <div className="w-full bg-black bg-gradient-to-b from-gray-700">
       <Header />
       <MainContainer />
       <SecondaryContainer />

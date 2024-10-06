@@ -7,7 +7,7 @@ const VideoBackground = ({ movieID }) => {
   const trailerVideo = useSelector((store) => store.movies?.trailerVideo);
 
   return (
-    <div className="relative h-full w-full max-h-[1000px] overflow-hidden">
+    <div className="relative h-full w-full  overflow-hidden">
       <div className="relative w-full h-full scale-150 aspect-video">
         <div className="absolute inset-0 bg-gradient-to-r from-gray-950 to-transparent z-10"></div>
         <iframe

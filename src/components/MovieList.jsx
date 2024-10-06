@@ -1,5 +1,9 @@
 import React, { useRef } from "react";
 import MovieCard from "./MovieCard";
+import {
+  BsFillArrowLeftCircleFill,
+  BsFillArrowRightCircleFill,
+} from "react-icons/bs";
 
 const MovieList = ({ title, movies }) => {
   const scrollRef = useRef(null);
@@ -24,11 +28,10 @@ const MovieList = ({ title, movies }) => {
         {title}
       </h1>
 
-      <button
+      <BsFillArrowLeftCircleFill
         onClick={() => scroll("left")}
-        className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-200 p-2 rounded-full z-10">
-        &#8249;
-      </button>
+        className="absolute left-4 top-1/2 transform -translate-y-1/2  text-gray-400 p-2 rounded-full z-20 text-5xl opacity-40 hover:opacity-100 transition-opacity duration-300"
+      />
 
       <div className=" flex overflow-x-scroll scrollbar-none" ref={scrollRef}>
         <div className="flex space-x-4 ">
@@ -42,11 +45,10 @@ const MovieList = ({ title, movies }) => {
         </div>
       </div>
 
-      <button
+      <BsFillArrowRightCircleFill
         onClick={() => scroll("right")}
-        className="absolute right-5 top-1/2 transform -translate-y-1/2 bg-gray-200 p-2 rounded-full z-10">
-        &#8250;
-      </button>
+        className="absolute right-4 top-1/2 transform -translate-y-1/2  text-gray-400 p-2 rounded-full z-20 text-5xl opacity-40 hover:opacity-100 transition-opacity duration-300"
+      />
     </div>
   );
 };
