@@ -1,4 +1,3 @@
-// useSearchMovie.js
 import { API_OPTIONS } from "../utils/Constants";
 
 const searchMovie = async (movieName) => {

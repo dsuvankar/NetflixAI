@@ -39,7 +39,7 @@ const Header = () => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        // User is signed in, see docs for a list of available properties
+        // User is signed in
         const { uid, email, displayName, photoURL } = user;
         dispatch(
           addUser({

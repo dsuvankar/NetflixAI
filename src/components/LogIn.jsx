@@ -10,13 +10,11 @@ import {
 import { auth } from "../utils/firebase";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
-import { useNavigate } from "react-router-dom";
 
 const LogIn = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [isSignUpForm, setIsSignUpForm] = useState(false);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const name = useRef(null);
   const email = useRef(null);
