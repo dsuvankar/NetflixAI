@@ -8,7 +8,7 @@ const gptSlice = createSlice({
     movieResult: null,
     movieNames: null,
     movieResults: null,
-    searchError: null, // New state to track the error
+    searchError: null,
   },
   reducers: {
     toggleGptSearch: (state, action) => {
@@ -18,12 +18,12 @@ const gptSlice = createSlice({
       const { movieNames, movieResults } = action.payload;
       state.movieNames = movieNames;
       state.movieResults = movieResults;
-      state.searchError = null; // Reset error on successful movie results
+      state.searchError = null;
     },
     clearMovieResults: (state, action) => {
       state.movieResults = null;
       state.movieNames = null;
-      state.searchError = null; // Reset error when clearing results
+      state.searchError = null;
     },
     setSearchError: (state, action) => {
       state.searchError = action.payload;
